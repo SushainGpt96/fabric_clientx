@@ -1,0 +1,259 @@
+---
+################################################################################
+#
+#   Section: Organizations
+#
+#   - This section defines the different organizational identities which will
+#   be referenced later in the configuration.
+#
+################################################################################
+Organizations:
+  # - &OrdererOrg
+  #   Name: OrdererOrg
+
+  #   ID: OrdererMSP
+
+  #   MSPDir: ./crypto-config/ordererOrganizations/zuelligpharma.com/msp
+
+  #   Policies:
+  #     Readers:
+  #       Type: Signature
+  #       Rule: "OR('OrdererMSP.member')"
+  #     Writers:
+  #       Type: Signature
+  #       Rule: "OR('OrdererMSP.member')"
+  #     Admins:
+  #       Type: Signature
+  #       Rule: "OR('OrdererMSP.admin')"
+
+  #   OrdererEndpoints:
+  #     - orderer.zuelligpharma.com:7050
+
+  - &client1
+    Name: client1MSP
+
+    ID: client1MSP
+
+    MSPDir: /home/azureuser/organizations1/peerOrganizations/client1.zuelligpharma.com/msp
+
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('client1MSP.admin', 'client1MSP.peer', 'client1MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('client1MSP.admin', 'client1MSP.client', 'client1MSP.peer')"
+      Admins:
+        Type: Signature
+        Rule: "OR('client1MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('client1MSP.peer')"
+
+    AnchorPeers:
+      - Host: peer0.client1.zuelligpharma.com
+        Port: 7051
+
+  - &city2
+    Name: city2MSP
+
+    ID: city2MSP
+
+    MSPDir: ./crypto-config/peerOrganizations/city2.zuelligpharma.com/msp
+
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('city2MSP.admin', 'city2MSP.peer', 'city2MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('city2MSP.admin', 'city2MSP.client', 'city2MSP.peer')"
+      Admins:
+        Type: Signature
+        Rule: "OR('city2MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('city2MSP.peer')"
+
+    AnchorPeers:
+      - Host: peer0.city2.zuelligpharma.com
+        Port: 9051
+
+  - &city3
+    Name: city3MSP
+
+    ID: city3MSP
+
+    MSPDir: ./crypto-config/peerOrganizations/city3.zuelligpharma.com/msp
+
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('city3MSP.admin', 'city3MSP.peer', 'city3MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('city3MSP.admin', 'city3MSP.client', 'city3MSP.peer')"
+      Admins:
+        Type: Signature
+        Rule: "OR('city3MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('city3MSP.peer')"
+
+    AnchorPeers:
+      - Host: peer0.city3.zuelligpharma.com
+        Port: 11051
+
+################################################################################
+#   SECTION: Capabilities
+################################################################################
+
+Capabilities:
+  Channel: &ChannelCapabilities
+    V2_0: true
+
+  Orderer: &OrdererCapabilities
+    V2_0: true
+
+  Application: &ApplicationCapabilities
+    V2_0: true
+
+################################################################################
+#   SECTION: Application
+################################################################################
+Application: &ApplicationDefaults
+  Organizations:
+
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    LifecycleEndorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+    Endorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+
+  Capabilities:
+    <<: *ApplicationCapabilities
+
+################################################################################
+#   SECTION: Orderer
+################################################################################
+Orderer: &OrdererDefaults
+  OrdererType: etcdraft
+  EtcdRaft:
+    Consenters:
+      - Host: orderer.zuelligpharma.com
+        Port: 7050
+        ClientTLSCert: ./crypto-config/ordererOrganizations/zuelligpharma.com/orderers/orderer.zuelligpharma.com/tls/server.crt
+        ServerTLSCert: ./crypto-config/ordererOrganizations/zuelligpharma.com/orderers/orderer.zuelligpharma.com/tls/server.crt
+      - Host: orderer2.zuelligpharma.com
+        Port: 8050
+        ClientTLSCert: ./crypto-config/ordererOrganizations/zuelligpharma.com/orderers/orderer2.zuelligpharma.com/tls/server.crt
+        ServerTLSCert: ./crypto-config/ordererOrganizations/zuelligpharma.com/orderers/orderer2.zuelligpharma.com/tls/server.crt
+      - Host: orderer3.zuelligpharma.com
+        Port: 9050
+        ClientTLSCert: ./crypto-config/ordererOrganizations/zuelligpharma.com/orderers/orderer3.zuelligpharma.com/tls/server.crt
+        ServerTLSCert: ./crypto-config/ordererOrganizations/zuelligpharma.com/orderers/orderer3.zuelligpharma.com/tls/server.crt
+      - Host: orderer4.zuelligpharma.com
+        Port: 10050
+        ClientTLSCert: ./crypto-config/ordererOrganizations/zuelligpharma.com/orderers/orderer4.zuelligpharma.com/tls/server.crt
+        ServerTLSCert: ./crypto-config/ordererOrganizations/zuelligpharma.com/orderers/orderer4.zuelligpharma.com/tls/server.crt
+      - Host: orderer5.zuelligpharma.com
+        Port: 11050
+        ClientTLSCert: ./crypto-config/ordererOrganizations/zuelligpharma.com/orderers/orderer5.zuelligpharma.com/tls/server.crt
+        ServerTLSCert: ./crypto-config/ordererOrganizations/zuelligpharma.com/orderers/orderer5.zuelligpharma.com/tls/server.crt
+  Addresses:
+    - orderer.zuelligpharma.com:7050
+    - orderer2.zuelligpharma.com:8050
+    - orderer3.zuelligpharma.com:9050
+    - orderer4.zuelligpharma.com:10050
+    - orderer5.zuelligpharma.com:11050
+
+  BatchTimeout: 2s
+
+  BatchSize:
+    MaxMessageCount: 10
+
+    AbsoluteMaxBytes: 99 MB
+
+    PreferredMaxBytes: 512 KB
+
+  Organizations:
+
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    BlockValidation:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+
+################################################################################
+#   CHANNEL
+################################################################################
+Channel: &ChannelDefaults
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+
+  Capabilities:
+    <<: *ChannelCapabilities
+
+################################################################################
+#   Profile
+################################################################################
+Profiles:
+  zuelligpharmachannel:
+    Consortium: BasicConsortium
+    <<: *ChannelDefaults
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - <<: *client1
+
+      Capabilities:
+        <<: *ApplicationCapabilities
+
+  # OrdererChannel:
+  #   <<: *ChannelDefaults
+  #   Capabilities:
+  #     <<: *ChannelCapabilities
+  #   Orderer:
+  #     <<: *OrdererDefaults
+  #     OrdererType: etcdraft
+  #     Organizations:
+  #       - <<: *OrdererOrg
+  #     Capabilities:
+  #       <<: *OrdererCapabilities
+  #   Application:
+  #     <<: *ApplicationDefaults
+  #     Organizations:
+  #       - <<: *OrdererOrg
+  #   Consortiums:
+  #     BasicConsortium:
+  #       Organizations:
+  #         - <<: *client1
+  #         - <<: *city2
+  #         - <<: *city3
